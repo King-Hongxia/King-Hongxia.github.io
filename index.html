@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 高效提问助手</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <h1>AI 高效提问助手</h1>
+                <button id="theme-toggle" onclick="toggleTheme()">🌙</button>
+            </div>
+            <p>让 AI 100% 听懂你的需求</p>
+        </header>
+        
+        <main>
+            <section class="quick-select">
+                <h2>常用场景快速选择</h2>
+                <div class="quick-buttons">
+                    <button onclick="setQuickScenario('编程求助')">编程求助</button>
+                    <button onclick="setQuickScenario('学习解题')">学习解题</button>
+                    <button onclick="setQuickScenario('文案写作')">文案写作</button>
+                    <button onclick="setQuickScenario('职场工作')">职场工作</button>
+                    <button onclick="setQuickScenario('生活建议')">生活建议</button>
+                </div>
+            </section>
+            
+            <section class="core-module">
+                <h2>核心填空模块（必选）</h2>
+                <p class="tip">真没啥填可以写无</p>
+                
+                <div class="form-group">
+                    <label for="role">我希望你扮演的角色 / 身份</label>
+                    <input type="text" id="role" placeholder="例：编程导师、文案写手、数学老师、产品经理、职场顾问">
+                </div>
+                
+                <div class="form-group">
+                    <label for="task">我的核心任务 / 目标</label>
+                    <input type="text" id="task" placeholder="例：写一份简历、修复一段代码、制定学习计划、解答一道题">
+                </div>
+                
+                <div class="form-group">
+                    <label for="requirements">具体要求 / 限制</label>
+                    <input type="text" id="requirements" placeholder="例：简洁、详细、带步骤、带案例、禁止使用专业术语">
+                </div>
+                
+                <div class="form-group">
+                    <label for="info">我已有的信息 / 材料</label>
+                    <input type="text" id="info" placeholder="例：我的代码、我的草稿、我的背景、我的数据">
+                </div>
+                
+                <div class="file-upload-module">
+                    <div class="accordion-header" onclick="toggleFileUpload()">
+                        <h3>上传文件（可选）</h3>
+                        <span id="file-upload-icon">▼</span>
+                    </div>
+                    <div class="accordion-content" id="file-upload-content">
+                        <div class="form-group">
+                            <label for="file-type">文件类型</label>
+                            <select id="file-type" onchange="toggleCustomInput('file-type')">
+                                <option value="">请选择</option>
+                                <option value="图片">图片</option>
+                                <option value="文档">文档</option>
+                                <option value="PPT">PPT</option>
+                                <option value="Excel">Excel</option>
+                                <option value="自定义">自定义</option>
+                            </select>
+                            <input type="text" id="file-type-custom" class="custom-input" placeholder="请输入自定义文件类型" style="display: none;">
+                        </div>
+                        <div class="form-group">
+                            <label for="file-description">文件描述</label>
+                            <input type="text" id="file-description" placeholder="例：产品需求文档、项目计划PPT">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="format">输出格式 / 风格</label>
+                    <input type="text" id="format" placeholder="例：分点、表格、步骤、代码带注释、口语化、正式">
+                    <div class="format-buttons">
+                        <button onclick="setFormat('分点回答')">分点回答</button>
+                        <button onclick="setFormat('步骤教程')">步骤教程</button>
+                        <button onclick="setFormat('表格展示')">表格展示</button>
+                        <button onclick="setFormat('代码带注释')">代码带注释</button>
+                        <button onclick="setFormat('详细解释')">详细解释</button>
+                        <button onclick="setFormat('简洁回答')">简洁回答</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes">额外补充说明</label>
+                    <input type="text" id="notes" placeholder="例：紧急、需要优化、需要解释原理">
+                </div>
+            </section>
+            
+            <section class="advanced-module">
+                <div class="accordion-header" onclick="toggleAccordion()">
+                    <h2>可选高级模块（给专业用户使用）</h2>
+                    <span id="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content" id="accordion-content">
+                    <div class="form-group">
+                        <label for="scenario">使用场景</label>
+                        <select id="scenario" onchange="toggleCustomInput('scenario')">
+                            <option value="">请选择</option>
+                            <option value="学习">学习</option>
+                            <option value="工作">工作</option>
+                            <option value="创作">创作</option>
+                            <option value="编程">编程</option>
+                            <option value="自定义">自定义</option>
+                        </select>
+                        <input type="text" id="scenario-custom" class="custom-input" placeholder="请输入自定义使用场景" style="display: none;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="difficulty">难度等级</label>
+                        <select id="difficulty" onchange="toggleCustomInput('difficulty')">
+                            <option value="">请选择</option>
+                            <option value="简单">简单</option>
+                            <option value="中等">中等</option>
+                            <option value="详细">详细</option>
+                            <option value="专家级">专家级</option>
+                            <option value="自定义">自定义</option>
+                        </select>
+                        <input type="text" id="difficulty-custom" class="custom-input" placeholder="请输入自定义难度等级" style="display: none;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="result">希望得到的结果</label>
+                        <select id="result" onchange="toggleCustomInput('result')">
+                            <option value="">请选择</option>
+                            <option value="思路">思路</option>
+                            <option value="代码">代码</option>
+                            <option value="文案">文案</option>
+                            <option value="步骤">步骤</option>
+                            <option value="方案">方案</option>
+                            <option value="自定义">自定义</option>
+                        </select>
+                        <input type="text" id="result-custom" class="custom-input" placeholder="请输入自定义希望得到的结果" style="display: none;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="prohibited">禁止内容</label>
+                        <input type="text" id="prohibited" placeholder="例：不要太专业、不要太长、不要举例等">
+                    </div>
+                </div>
+            </section>
+            
+            <section class="actions">
+                <button id="generate-btn" onclick="generatePrompt()">生成提问</button>
+                <button id="copy-btn" onclick="copyToClipboard()">一键复制</button>
+                <button id="clear-btn" onclick="clearAll()">清空</button>
+                <div id="copy-message" class="copy-message">已复制，直接粘贴</div>
+            </section>
+            
+            <section class="preview">
+                <h2>预览</h2>
+                <div id="preview-content" class="preview-content"></div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
