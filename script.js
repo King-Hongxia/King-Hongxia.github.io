@@ -8,7 +8,7 @@ let conversationHistory = [];
 let originalPrompt = '';
 // API配置
 let apiMode = 'backend'; // 'backend' 或 'frontend'
-let backendUrl = 'http://localhost:3001';
+let backendUrl = 'https://king-hongxia-github-io.vercel.app/';
 let userApiKey = '';
 
 // 页面加载完成后初始化
