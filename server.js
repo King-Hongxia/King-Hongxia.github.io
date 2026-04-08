@@ -13,6 +13,19 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
+// 根路径
+app.get('/', (req, res) => {
+    res.json({
+        status: 'ok',
+        message: 'AI提示词优化器后端服务运行中',
+        version: '1.0.0',
+        endpoints: {
+            health: '/api/health',
+            optimize: '/api/optimize'
+        }
+    });
+});
+
 // 优化提示词的API端点
 app.post('/api/optimize', async (req, res) => {
     try {
@@ -30,14 +43,14 @@ app.post('/api/optimize', async (req, res) => {
         }
         
         // 调用豆包API
-        const response = await fetch('https://api.doubao.com/v1/chat/completions', {
+        const response = await fetch('https://ark.cn-beijing.volces.com/api/v3/chat/completions', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${apiKey}`
             },
             body: JSON.stringify({
-                model: 'doubao-pro',
+                model: 'doubao-pro-32k',
                 messages: [
                     {
                         role: 'system',
@@ -53,7 +66,8 @@ app.post('/api/optimize', async (req, res) => {
         });
         
         if (!response.ok) {
-            throw new Error(`API调用失败: ${response.status}`);
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(`API调用失败: ${response.status} ${JSON.stringify(errorData)}`);
         }
         
         const data = await response.json();
@@ -62,15 +76,31 @@ app.post('/api/optimize', async (req, res) => {
         res.json({ optimized: optimizedResult });
     } catch (error) {
         console.error('优化失败:', error);
-        res.status(500).json({ error: '优化失败，请稍后重试' });
+        res.status(500).json({ 
+            error: '优化失败，请稍后重试',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined 
+        });
     }
 });
 
 // 健康检查端点
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok' });
+    res.json({ 
+        status: 'ok',
+        timestamp: new Date().toISOString()
+    });
+});
+
+// 404处理
+app.use((req, res) => {
+    res.status(404).json({ 
+        error: '端点不存在',
+        path: req.path
+    });
 });
 
 app.listen(PORT, () => {
     console.log(`服务器运行在 http://localhost:${PORT}`);
+    console.log(`健康检查: http://localhost:${PORT}/api/health`);
+    console.log(`优化API: http://localhost:${PORT}/api/optimize`);
 });
